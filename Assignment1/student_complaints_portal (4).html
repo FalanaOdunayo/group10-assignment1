@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Complaints Portal</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #b3e5fc, #e1bee7);
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      width: 80%;
+      margin: 40px auto;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      padding: 30px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #1a237e;
+      font-size: 32px;
+      text-shadow: 1px 1px #ccc;
+    }
+
+    h2 {
+      color: #303f9f;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      margin-top: 15px;
+      background-color: #6200ea;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background-color: #7b1fa2;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #673ab7;
+      color: white;
+    }
+
+    .filter-section, .export-buttons {
+      margin-top: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Student Complaints Portal</h1>
+
+    <h2>Submit Complaint</h2>
+    <form id="complaintForm">
+      <label>Category</label>
+      <select id="category" required>
+        <option value="">Select Category</option>
+        <option value="Academics">Academics</option>
+        <option value="Hostel">Hostel</option>
+        <option value="Cafeteria">Cafeteria</option>
+        <option value="Administration">Administration</option>
+        <option value="Others">Others</option>
+      </select>
+
+      <label>Title</label>
+      <input type="text" id="title" required>
+
+      <label>Description</label>
+      <textarea id="description" rows="3" required></textarea>
+
+      <button type="submit">Submit</button>
+    </form>
+
+    <div class="filter-section">
+      <h2>Filter Complaints</h2>
+      <select id="filterCategory">
+        <option value="All">All Categories</option>
+        <option value="Academics">Academics</option>
+        <option value="Hostel">Hostel</option>
+        <option value="Cafeteria">Cafeteria</option>
+        <option value="Administration">Administration</option>
+        <option value="Others">Others</option>
+      </select>
+    </div>
+
+    <h2>Submitted Complaints</h2>
+    <table id="complaintsTable">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Category</th>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <div class="export-buttons">
+      <button id="exportCSV">Export CSV</button>
+      <button id="loadComplaints">Load Complaints</button>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('complaintForm');
+    const tableBody = document.querySelector('#complaintsTable tbody');
+    const filterCategory = document.getElementById('filterCategory');
+
+    let complaints = JSON.parse(localStorage.getItem('complaints')) || [];
+
+    function renderTable(filter = 'All') {
+      tableBody.innerHTML = '';
+      complaints
+        .filter(c => filter === 'All' || c.category === filter)
+        .forEach((c, index) => {
+          const row = `<tr>
+            <td>${index + 1}</td>
+            <td>${c.category}</td>
+            <td>${c.title}</td>
+            <td>${c.description}</td>
+            <td>${c.status}</td>
+          </tr>`;
+          tableBody.innerHTML += row;
+        });
+    }
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const category = document.getElementById('category').value;
+      const title = document.getElementById('title').value;
+      const description = document.getElementById('description').value;
+
+      const newComplaint = {
+        category,
+        title,
+        description,
+        status: 'Pending'
+      };
+
+      complaints.push(newComplaint);
+      localStorage.setItem('complaints', JSON.stringify(complaints));
+
+      form.reset();
+      renderTable();
+    });
+
+    filterCategory.addEventListener('change', e => {
+      renderTable(e.target.value);
+    });
+
+    document.getElementById('loadComplaints').addEventListener('click', () => {
+      renderTable();
+    });
+
+    document.getElementById('exportCSV').addEventListener('click', () => {
+      let csv = 'ID,Category,Title,Description,Status\n';
+      complaints.forEach((c, i) => {
+        csv += `${i + 1},${c.category},${c.title},${c.description},${c.status}\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'complaints.csv';
+      a.click();
+    });
+
+    renderTable();
+  </script>
+</body>
+</html>
