@@ -1,0 +1,78 @@
+/* ====== Babcock University Complaint Management System ====== */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f8f9fb;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background-color: #0b3d91; /* Babcock blue */
+  color: white;
+  padding: 15px;
+  text-align: center;
+}
+
+h2 {
+  color: #0b3d91;
+}
+
+form {
+  background: white;
+  width: 400px;
+  margin: 40px auto;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+input, textarea, select {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+button {
+  background-color: #d4af37; /* Gold accent */
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+button:hover {
+  background-color: #b68c1c;
+}
+
+table {
+  width: 90%;
+  margin: 20px auto;
+  border-collapse: collapse;
+  background: white;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+}
+
+th {
+  background-color: #0b3d91;
+  color: white;
+}
+
+a {
+  text-decoration: none;
+  color: #0b3d91;
+  font-weight: bold;
+}
+
+a:hover {
+  text-decoration: underline;
+}
